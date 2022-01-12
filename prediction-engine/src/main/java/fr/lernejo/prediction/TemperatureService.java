@@ -4,10 +4,9 @@ import org.springframework.stereotype.Component;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Random;
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -33,6 +32,19 @@ public class TemperatureService {
             throw new UnknownCountryException(country);
         }
         return generateBelievableTemperature(data);
+    }
+
+    public TemperatureByCountry getTemperatureOn2DaySliding(String country) throws UnknownCountryException {
+        Temperature t1 = new Temperature();
+        t1.setDate(LocalDate.now().minus(Period.ofDays(1)));
+        t1.setTemperature(this.getTemperature(country));
+        Temperature t2 = new Temperature();
+        t2.setDate(LocalDate.now());
+        t2.setTemperature(this.getTemperature(country));
+        TemperatureByCountry tbc = new TemperatureByCountry();
+        tbc.setTemperatures(Arrays.asList(t1, t2));
+        tbc.setCountry(country);
+        return tbc;
     }
 
     private double generateBelievableTemperature(TemperatureGenerationData data) {

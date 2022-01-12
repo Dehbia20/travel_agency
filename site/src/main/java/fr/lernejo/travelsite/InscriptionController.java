@@ -1,4 +1,4 @@
-package fr.lernejo.prediction;
+package fr.lernejo.travelsite;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

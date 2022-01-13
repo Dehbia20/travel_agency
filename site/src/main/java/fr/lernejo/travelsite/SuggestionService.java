@@ -14,34 +14,38 @@ import java.util.List;
 @Service
 public class SuggestionService {
     private final PredictionEngineClient client;
+    private final List<Travel> matching = new ArrayList<>();
 
     public SuggestionService(@Autowired PredictionEngineClient client) {
         this.client = client;
     }
 
     public List<Travel> getExpectation(String weatherExpectation, int minimumTemperatureDistance, String userCountry) {
+        matching.clear();
         TemperatureByCountry userTbc = findByCountry(userCountry);
         if (userTbc == null) {
             throw new RuntimeException();
         }
         double userTemp = avg(userTbc.getTemperatures());
-        List<Travel> matching = new ArrayList<>();
         List<String> lines = loadCountries();
 
         for (String l : lines) {
             TemperatureByCountry tbc = findByCountry(l);
-            if (tbc != null) {
-                double avg = avg(tbc.getTemperatures());
-                boolean matches = matches(avg, weatherExpectation, minimumTemperatureDistance, userTemp);
-                if (matches) {
-                    Travel travel = new Travel(tbc.getCountry(), avg);
-                    matching.add(travel);
-                }
-            }
+            handle(tbc, weatherExpectation, minimumTemperatureDistance, userTemp);
         }
         return matching;
     }
 
+    private void handle(TemperatureByCountry tbc, String weatherExpectation, int minimumTemperatureDistance, double userTemp) {
+        if (tbc != null) {
+            double avg = avg(tbc.getTemperatures());
+            boolean matches = matches(avg, weatherExpectation, minimumTemperatureDistance, userTemp);
+            if (matches) {
+                Travel travel = new Travel(tbc.getCountry(), avg);
+                matching.add(travel);
+            }
+        }
+    }
     private List<String> loadCountries() {
         try (InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("countries.txt")) {
             String content = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
@@ -74,10 +78,10 @@ public class SuggestionService {
     private boolean matches(double avg, String weatherExpectation, int minimumTemperatureDistance, double countryTemp) {
         boolean matches = false;
         if (weatherExpectation.equalsIgnoreCase("WARMER")) {
-            matches = avg > (countryTemp + minimumTemperatureDistance);
+            matches = avg >= (countryTemp + minimumTemperatureDistance);
         } else {
-            matches = avg < (countryTemp - minimumTemperatureDistance);
+            matches = avg <= (countryTemp - minimumTemperatureDistance);
         }
         return matches;
-    } 
+    }
 }

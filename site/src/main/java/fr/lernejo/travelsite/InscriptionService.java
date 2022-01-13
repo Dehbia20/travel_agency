@@ -19,6 +19,7 @@ public class InscriptionService {
             validate(inscription.getUserName() == null || "".equals(inscription.getUserName()));
             validate(inscription.getWeatherExpectation() == null || Arrays.asList("WARMER", "COLDER").stream().noneMatch(s -> s.equals(inscription.getWeatherExpectation())));
             validate(inscription.getMinimumTemperatureDistance()  < 0 || inscription.getMinimumTemperatureDistance() > 40);
+            validate(inscription.getUserCountry() == null || "".equals(inscription.getUserCountry()));
         } catch(IllegalArgumentException e) {
             return ResponseEntity.unprocessableEntity().build();
         }

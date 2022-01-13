@@ -7,6 +7,11 @@ public class Inscription {
     private final String userName;
     private final String weatherExpectation;
     private final int minimumTemperatureDistance;
+    private final String userCountry;
+
+    public String getUserCountry() {
+        return userCountry;
+    }
 
     public String getWeatherExpectation() {
         return weatherExpectation;
@@ -27,11 +32,13 @@ public class Inscription {
     public Inscription(@JsonProperty("userEmail") String userEmail,
                        @JsonProperty("userName") String userName,
                        @JsonProperty("weatherExpectation") String weatherExpectation,
-                       @JsonProperty("minimumTemperatureDistance") int minimumTemperatureDistance) {
+                       @JsonProperty("minimumTemperatureDistance") int minimumTemperatureDistance,
+                       @JsonProperty("userCountry") String userCountry) {
         this.userEmail = userEmail;
         this.userName = userName;
         this.weatherExpectation = weatherExpectation;
         this.minimumTemperatureDistance = minimumTemperatureDistance;
+        this.userCountry = userCountry;
     }
 
 }

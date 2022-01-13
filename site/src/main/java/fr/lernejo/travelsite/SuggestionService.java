@@ -19,43 +19,65 @@ public class SuggestionService {
         this.client = client;
     }
 
-    public List<Travel> getExpectation(String weatherExpectation, int minimumTemperatureDistance) {
-        String content = null;
+    public List<Travel> getExpectation(String weatherExpectation, int minimumTemperatureDistance, String userCountry) {
+        TemperatureByCountry userTbc = findByCountry(userCountry);
+        if (userTbc == null) {
+            throw new RuntimeException();
+        }
+        double userTemp = avg(userTbc.getTemperatures());
         List<Travel> matching = new ArrayList<>();
-        try (InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("countries.txt");
-        ) {
-            content = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-            List<String> lines = content.lines().toList();
+        List<String> lines = loadCountries();
 
-            for (String l : lines) {
-                Response<TemperatureByCountry> response = client.getTemperatureByCountry(l).execute();
-                if (response.isSuccessful()) {
-                    TemperatureByCountry t = response.body();
-
-                    double avg = t.getTemperatures().stream().mapToDouble(Temperature::getTemperature).average().getAsDouble();
-                    boolean matches = matches(avg, weatherExpectation, minimumTemperatureDistance);
-
-                    if (matches) {
-                        Travel travel = new Travel(t.getCountry(), avg);
-                        matching.add(travel);
-                    }
+        for (String l : lines) {
+            TemperatureByCountry tbc = findByCountry(l);
+            if (tbc != null) {
+                double avg = avg(tbc.getTemperatures());
+                boolean matches = matches(avg, weatherExpectation, minimumTemperatureDistance, userTemp);
+                if (matches) {
+                    Travel travel = new Travel(tbc.getCountry(), avg);
+                    matching.add(travel);
                 }
             }
+        }
+        return matching;
+    }
 
-            return matching;
-
+    private List<String> loadCountries() {
+        try (InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("countries.txt")) {
+            String content = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+            return content.lines().toList();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private boolean matches(double avg, String weatherExpectation, int minimumTemperatureDistance) {
+    private TemperatureByCountry findByCountry(String country) {
+        try {
+            Response<TemperatureByCountry> response = client.getTemperatureByCountry(country).execute();
+            if (!response.isSuccessful()) {
+                return null;
+            }
+            return response.body();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    private double avg(List<Temperature> temperatures) {
+        if (temperatures != null) {
+            return temperatures.stream().mapToDouble(Temperature::getTemperature).average().getAsDouble();
+        }
+        return 0.0;
+    }
+
+    private boolean matches(double avg, String weatherExpectation, int minimumTemperatureDistance, double countryTemp) {
         boolean matches = false;
         if (weatherExpectation.equalsIgnoreCase("WARMER")) {
-            matches = avg > minimumTemperatureDistance;
+            matches = avg > (countryTemp + minimumTemperatureDistance);
         } else {
-            matches = avg < minimumTemperatureDistance;
+            matches = avg < (countryTemp - minimumTemperatureDistance);
         }
         return matches;
-    }
+    } 
 }

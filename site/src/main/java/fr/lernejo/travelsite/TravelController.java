@@ -29,7 +29,7 @@ public class TravelController {
             return ResponseEntity.ok(new ArrayList<>());
         }
         try {
-            return ResponseEntity.ok(suggestionService.getExpectation(inscription.getWeatherExpectation(), inscription.getMinimumTemperatureDistance()));
+            return ResponseEntity.ok(suggestionService.getExpectation(inscription.getWeatherExpectation(), inscription.getMinimumTemperatureDistance(), inscription.getUserCountry()));
         } catch (RuntimeException e) {
             return ResponseEntity.ok(new ArrayList<>());
         }

@@ -21,10 +21,19 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.squareup.retrofit2/converter-jackson -->
         <dependency>
             <groupId>com.squareup.retrofit2</groupId>
-            <artifactId>retrofit</artifactId>
+            <artifactId>converter-jackson</artifactId>
             <version>2.9.0</version>
+        </dependency>
+
+
+        <!-- probleme de deserialisation tiré de https://stackoverflow.com/questions/32343183/retrofit-could-not-locate-converter-for-class-crashing-app-->
+        <dependency>
+            <groupId>com.squareup.retrofit2</groupId>
+            <artifactId>converter-gson</artifactId>
+            <version>2.3.0</version>
         </dependency>
     </dependencies>
 

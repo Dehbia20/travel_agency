@@ -3,17 +3,18 @@ package fr.lernejo.travelsite;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 public class Temperature {
     @JsonFormat(pattern = "dd/MM/yyyy")
-    private LocalDate date;
+    private Date date;
     private double temperature;
 
-    public LocalDate getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 

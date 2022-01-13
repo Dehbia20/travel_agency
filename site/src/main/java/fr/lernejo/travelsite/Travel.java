@@ -2,7 +2,7 @@ package fr.lernejo.travelsite;
 
 public class Travel {
     private String name;
-    private float temperature;
+    private double temperature;
 
     public String getName() {
         return name;
@@ -12,11 +12,11 @@ public class Travel {
         this.name = name;
     }
 
-    public float getTemperature() {
+    public double getTemperature() {
         return temperature;
     }
 
-    public void setTemperature(float temperature) {
+    public void setTemperature(double temperature) {
         this.temperature = temperature;
     }
 }

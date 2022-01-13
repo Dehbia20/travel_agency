@@ -29,7 +29,7 @@ public class SuggestionService {
 
             for (String l : lines) {
                 Response<TemperatureByCountry> response = client.getTemperatureByCountry(l).execute();
-                if (!response.isSuccessful()) {
+                if (response.isSuccessful()) {
                     TemperatureByCountry t = response.body();
 
                     double avg = t.getTemperatures().stream().mapToDouble(Temperature::getTemperature).average().getAsDouble();

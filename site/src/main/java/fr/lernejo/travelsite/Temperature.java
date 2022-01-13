@@ -1,6 +1,7 @@
 package fr.lernejo.travelsite;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -14,7 +15,7 @@ public class Temperature {
         return date;
     }
 
-    public Temperature(Date date, double temperature) {
+    public Temperature(@JsonProperty("date") Date date, @JsonProperty("temperature") double temperature) {
         this.date = date;
         this.temperature = temperature;
     }

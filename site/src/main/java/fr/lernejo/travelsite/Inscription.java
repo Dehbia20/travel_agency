@@ -1,5 +1,7 @@
 package fr.lernejo.travelsite;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Inscription {
     private final String userEmail;
     private final String userName;
@@ -22,10 +24,14 @@ public class Inscription {
         return minimumTemperatureDistance;
     }
 
-    public Inscription(String userEmail, String userName, String weatherExpectation, int minimumTemperatureDistance) {
+    public Inscription(@JsonProperty("userEmail") String userEmail,
+                       @JsonProperty("userName") String userName,
+                       @JsonProperty("weatherExpectation") String weatherExpectation,
+                       @JsonProperty("minimumTemperatureDistance") int minimumTemperatureDistance) {
         this.userEmail = userEmail;
         this.userName = userName;
         this.weatherExpectation = weatherExpectation;
         this.minimumTemperatureDistance = minimumTemperatureDistance;
     }
+
 }

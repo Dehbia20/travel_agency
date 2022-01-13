@@ -11,8 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/temperature")
 public class TemperatureController {
 
-    @Autowired
-    private TemperatureService temperatureService;
+    private final TemperatureService temperatureService;
+    public TemperatureController(@Autowired TemperatureService ts) {
+        this.temperatureService = ts;
+    }
+
     @GetMapping
     public ResponseEntity<TemperatureByCountry> getTemperature(@RequestParam("country") String country) {
         try {

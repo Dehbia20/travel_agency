@@ -10,9 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/inscription")
 public class InscriptionController {
-    @Autowired
-    private InscriptionService inscriptionService;
 
+    private final InscriptionService inscriptionService;
+
+    public InscriptionController(@Autowired InscriptionService is) {
+        this.inscriptionService = is;
+    }
     @PostMapping
     public ResponseEntity<Void> create(@RequestBody Inscription inscription) {
         return inscriptionService.create(inscription);

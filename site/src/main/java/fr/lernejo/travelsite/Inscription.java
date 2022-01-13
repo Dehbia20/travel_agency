@@ -1,40 +1,31 @@
 package fr.lernejo.travelsite;
 
 public class Inscription {
-    private String userEmail;
-    private String userName;
-    private String weatherExpectation;
-    private int minimumTemperatureDistance;
+    private final String userEmail;
+    private final String userName;
+    private final String weatherExpectation;
+    private final int minimumTemperatureDistance;
 
     public String getWeatherExpectation() {
         return weatherExpectation;
     }
 
-    public void setWeatherExpectation(String weatherExpectation) {
-        this.weatherExpectation = weatherExpectation;
-    }
     public String getUserEmail() {
         return userEmail;
-    }
-
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
     }
 
     public String getUserName() {
         return userName;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-
     public int getMinimumTemperatureDistance() {
         return minimumTemperatureDistance;
     }
 
-    public void setMinimumTemperatureDistance(int minimumTemperatureDistance) {
+    public Inscription(String userEmail, String userName, String weatherExpectation, int minimumTemperatureDistance) {
+        this.userEmail = userEmail;
+        this.userName = userName;
+        this.weatherExpectation = weatherExpectation;
         this.minimumTemperatureDistance = minimumTemperatureDistance;
     }
 }

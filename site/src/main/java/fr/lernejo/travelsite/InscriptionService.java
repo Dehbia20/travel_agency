@@ -10,30 +10,27 @@ import java.util.List;
 
 @Service
 public class InscriptionService {
-    private List<Inscription> inscriptions = new ArrayList<>();
+    private final List<Inscription> inscriptions = new ArrayList<>();
 
     public ResponseEntity<Void> create(Inscription inscription) {
-        if (inscription == null) {
+        try {
+            validate(inscription == null);
+            validate(inscription.getUserEmail() == null || "".equals(inscription.getUserEmail()));
+            validate(inscription.getUserName() == null || "".equals(inscription.getUserName()));
+            validate(inscription.getWeatherExpectation() == null || Arrays.asList("WARMER", "COLDER").stream().noneMatch(s -> s.equals(inscription.getWeatherExpectation())));
+            validate(inscription.getMinimumTemperatureDistance()  < 0 || inscription.getMinimumTemperatureDistance() > 40);
+        } catch(IllegalArgumentException e) {
             return ResponseEntity.unprocessableEntity().build();
         }
 
-        if (inscription.getUserEmail() == null || "".equals(inscription.getUserEmail())) {
-            return ResponseEntity.unprocessableEntity().build();
-        }
-
-        if (inscription.getUserName() == null || "".equals(inscription.getUserName())) {
-            return ResponseEntity.unprocessableEntity().build();
-        }
-
-        if (inscription.getWeatherExpectation() == null || Arrays.asList("WARMER", "COLDER").stream().noneMatch(s -> s.equals(inscription.getWeatherExpectation()))) {
-            return ResponseEntity.unprocessableEntity().build();
-        }
-
-        if (inscription.getMinimumTemperatureDistance()  < 0 || inscription.getMinimumTemperatureDistance() > 40) {
-            return ResponseEntity.unprocessableEntity().build();
-        }
         inscriptions.add(inscription);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    private void validate(boolean condition) {
+        if (condition) {
+            throw new IllegalArgumentException("Invalid argument");
+        }
     }
 
     public Inscription findByUsername(String username) {

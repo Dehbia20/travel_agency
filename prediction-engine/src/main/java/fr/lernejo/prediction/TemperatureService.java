@@ -36,16 +36,9 @@ public class TemperatureService {
     }
 
     public TemperatureByCountry getTemperatureOn2DaySliding(String country) throws UnknownCountryException {
-        Temperature t1 = new Temperature();
-        t1.setDate(Date.from(LocalDate.now().minus(Period.ofDays(1)).atStartOfDay(ZoneId.systemDefault()).toInstant()));
-        t1.setTemperature(this.getTemperature(country));
-        Temperature t2 = new Temperature();
-        t2.setDate(new Date());
-        t2.setTemperature(this.getTemperature(country));
-        TemperatureByCountry tbc = new TemperatureByCountry();
-        tbc.setTemperatures(Arrays.asList(t1, t2));
-        tbc.setCountry(country);
-        return tbc;
+        Temperature t1 = new Temperature(Date.from(LocalDate.now().minus(Period.ofDays(1)).atStartOfDay(ZoneId.systemDefault()).toInstant()), this.getTemperature(country));
+        Temperature t2 = new Temperature(new Date(), this.getTemperature(country));
+        return new TemperatureByCountry(Arrays.asList(t1, t2), country);
     }
 
     private double generateBelievableTemperature(TemperatureGenerationData data) {

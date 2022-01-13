@@ -35,9 +35,7 @@ public class SuggestionService {
                 boolean matches = matches(avg, weatherExpectation, minimumTemperatureDistance);
 
                 if (matches) {
-                    Travel travel = new Travel();
-                    travel.setName(t.getCountry());
-                    travel.setTemperature(avg);
+                    Travel travel = new Travel(t.getCountry(), avg);
                     matching.add(travel);
                 }
             }

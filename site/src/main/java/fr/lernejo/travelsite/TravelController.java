@@ -7,22 +7,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/travels")
 public class TravelController {
 
-    @Autowired
-    private SuggestionService suggestionService;
-    @Autowired
-    private InscriptionService inscriptionService;
+    private final SuggestionService suggestionService;
+    private final InscriptionService inscriptionService;
+
+    public TravelController(@Autowired SuggestionService suggestionService, @Autowired InscriptionService inscriptionService) {
+        this.suggestionService = suggestionService;
+        this.inscriptionService = inscriptionService;
+    }
 
     @GetMapping
     public ResponseEntity<List<Travel>> suggestion(@RequestParam(name = "userName") String userName) {
         Inscription inscription = inscriptionService.findByUsername(userName);
         if (inscription == null) {
-            return ResponseEntity.unprocessableEntity().build();
+            return ResponseEntity.ok(new ArrayList<>());
         }
         return ResponseEntity.ok(suggestionService.getExpectation(inscription.getWeatherExpectation(), inscription.getMinimumTemperatureDistance()));
     }

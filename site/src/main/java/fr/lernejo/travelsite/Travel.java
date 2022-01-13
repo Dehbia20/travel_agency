@@ -1,22 +1,20 @@
 package fr.lernejo.travelsite;
 
 public class Travel {
-    private String name;
-    private double temperature;
+    private final String name;
+    private final double temperature;
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public double getTemperature() {
         return temperature;
     }
 
-    public void setTemperature(double temperature) {
+    public Travel(String name, double temperature) {
+        this.name = name;
         this.temperature = temperature;
     }
 }

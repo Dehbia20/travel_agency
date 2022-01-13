@@ -7,22 +7,20 @@ import java.util.Date;
 
 public class Temperature {
     @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date date;
-    private double temperature;
+    private final Date date;
+    private final double temperature;
 
     public Date getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public Temperature(Date date, double temperature) {
         this.date = date;
+        this.temperature = temperature;
     }
 
     public double getTemperature() {
         return temperature;
     }
 
-    public void setTemperature(double temperature) {
-        this.temperature = temperature;
-    }
 }

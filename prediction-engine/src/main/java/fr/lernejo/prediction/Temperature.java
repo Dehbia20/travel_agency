@@ -2,27 +2,24 @@ package fr.lernejo.prediction;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import java.time.LocalDate;
 import java.util.Date;
 
 public class Temperature {
     @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date date;
-    private double temperature;
+    private final Date date;
+    private final double temperature;
+
+    public Temperature(Date d, double t) {
+        this.temperature = t;
+        this.date = d;
+    }
 
     public Date getDate() {
         return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
     }
 
     public double getTemperature() {
         return temperature;
     }
 
-    public void setTemperature(double temperature) {
-        this.temperature = temperature;
-    }
 }

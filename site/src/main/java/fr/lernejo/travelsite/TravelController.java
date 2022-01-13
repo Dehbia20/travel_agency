@@ -28,6 +28,10 @@ public class TravelController {
         if (inscription == null) {
             return ResponseEntity.ok(new ArrayList<>());
         }
-        return ResponseEntity.ok(suggestionService.getExpectation(inscription.getWeatherExpectation(), inscription.getMinimumTemperatureDistance()));
+        try {
+            return ResponseEntity.ok(suggestionService.getExpectation(inscription.getWeatherExpectation(), inscription.getMinimumTemperatureDistance()));
+        } catch (RuntimeException e) {
+            return ResponseEntity.ok(new ArrayList<>());
+        }
     }
 }

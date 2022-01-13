@@ -20,25 +20,28 @@ public class SuggestionService {
     }
 
     public List<Travel> getExpectation(String weatherExpectation, int minimumTemperatureDistance) {
-        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("countries.txt");
         String content = null;
         List<Travel> matching = new ArrayList<>();
-        try {
+        try (InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("countries.txt");
+        ) {
             content = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
             List<String> lines = content.lines().toList();
 
             for (String l : lines) {
                 Response<TemperatureByCountry> response = client.getTemperatureByCountry(l).execute();
-                TemperatureByCountry t = response.body();
+                if (!response.isSuccessful()) {
+                    TemperatureByCountry t = response.body();
 
-                double avg = t.getTemperatures().stream().mapToDouble(Temperature::getTemperature).average().getAsDouble();
-                boolean matches = matches(avg, weatherExpectation, minimumTemperatureDistance);
+                    double avg = t.getTemperatures().stream().mapToDouble(Temperature::getTemperature).average().getAsDouble();
+                    boolean matches = matches(avg, weatherExpectation, minimumTemperatureDistance);
 
-                if (matches) {
-                    Travel travel = new Travel(t.getCountry(), avg);
-                    matching.add(travel);
+                    if (matches) {
+                        Travel travel = new Travel(t.getCountry(), avg);
+                        matching.add(travel);
+                    }
                 }
             }
+
             return matching;
 
         } catch (IOException e) {
